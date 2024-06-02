@@ -1,12 +1,13 @@
-// todo: import로 수정
-const express = require('express')
-const deepl = require('deepl-node');
-const dotenv = require("dotenv");
-const cors = require("cors");
+import { translate } from '@vitalets/google-translate-api';
+import { HttpProxyAgent } from 'http-proxy-agent';
+import express, { json, urlencoded } from 'express';
+import deepl from 'deepl-node';
+import { config } from "dotenv";
+import cors from "cors";
 
 const app = express()
 const port = 8080
-dotenv.config()
+config()
 const authKey = process.env.DEEPL_AUTHKEY;
 
 // todo: 나중에 cors 관련 수정
