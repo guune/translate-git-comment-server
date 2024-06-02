@@ -9,12 +9,12 @@ const app = express()
 const port = 8080
 config()
 const authKey = process.env.DEEPL_AUTHKEY;
+const agent = new HttpProxyAgent('http://51.254.78.223:80');
 
 // todo: 나중에 cors 관련 수정
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-const translator = new deepl.Translator(authKey);
+app.use(json());
+app.use(urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
     console.log("Test get")
@@ -22,8 +22,9 @@ app.get('/', (req, res) => {
 
 app.post("/translate", async (req, res) => {
     try {
-        const result = await translator.translateText(req.body.text, null, 'ko');
-        res.send({ "translatedComment": `${result["text"]}` });
+        const { text } = await translate(req.body.text, { to: 'ko', fetchOptions: { agent } });
+        // const result = await translate(req.body.text, null, { to: 'ko' });
+        res.send({ "translatedComment": text });
     }
     catch (error) {
         console.error("번역 중 에러 발생:", error);
